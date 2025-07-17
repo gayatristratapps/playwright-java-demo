@@ -12,6 +12,10 @@ public class AddContactsPage {
 
     public AddContactsPage(Page page) {
         this.page = page;
+        this.uploadCsvBtn = page.locator("#Uploadcsv"); // Adjust this ID or XPath
+        this.fileInput = page.locator("input[type='file']"); // Hidden input
+        this.saveBtn = page.locator("#Custom_Csv_Modal_Popup button:has-text('Save'):not([disabled])");
+    
     }
 
     // Navigate to Add Contacts menu
@@ -25,6 +29,14 @@ public class AddContactsPage {
         page.locator("text=Upload a CSV").click();
     }
 
+    
+   
+    
+    
+    
+    
+    
+    
     // ✅ Click "One at a Time" option
     public void clickOneAtATimeTab() {
         page.locator("text=One at a Time").click();
@@ -129,21 +141,20 @@ public class AddContactsPage {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    // Upload a file
-    public void uploadCsvFile(String filePath) {
-        page.setInputFiles("input[type='file']", Paths.get(filePath));
+ // Uploads the given CSV file
+    public void uploadCsv(String filePath) {
+        page.setInputFiles("input[type='file'][accept='.csv']", Paths.get(filePath));
     }
+    
+	/*
+	 * public void uploadCsvFile(String csvPath) {
+	 * page.setInputFiles("input[type='file']", Paths.get(csvPath)); }
+	 */
+    
+    
+    
+    
+    
 
     public void fillContactListDetails(String listName, boolean isPublic) {
         page.locator("input[placeholder='List Name']").fill(listName);
@@ -156,9 +167,67 @@ public class AddContactsPage {
 
     public void clickSave() {
      //   page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Save")).click();
+    	
+    	
+    	
         Locator saveBtn = page.locator("//button[span[contains(text(),'Save')]]");
         saveBtn.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         saveBtn.click();
 
     }
+    
+    
+    public void clickSaveCSV() {
+    	
+    	page.waitForSelector("//button[@id='sample_editable_1_new']//span[@class='btn Btn-Green transition text_pd5']");
+    	page.locator("//button[@id='sample_editable_1_new']//span[@class='btn Btn-Green transition text_pd5']").click();
+
+    	
+    }
+    
+    public void Acceptsave() {
+    
+    	page.waitForSelector("//div[@id='tcModal']//button//span[contains(text(),'Accept')]");
+    	page.locator("//div[@id='tcModal']//button//span[contains(text(),'Accept')]").click();
+
+    }
+    
+
+    // Locators
+    private Locator uploadCsvBtn;
+    private Locator fileInput;
+    private Locator saveBtn;
+
+       
+
+    public void uploadCsvFile(String csvPath) {
+        // Wait for file input to be visible
+        fileInput.waitFor(new Locator.WaitForOptions().setTimeout(5000).setState(WaitForSelectorState.ATTACHED));
+
+        // Upload file
+        fileInput.setInputFiles(Paths.get(csvPath));
+        System.out.println("CSV File set: " + csvPath);
+    }
+
+    
+    public void legal( ) {
+    
+ // Locate the dropdown input element
+    Locator legalBasisInput = page.locator("//input[@placeholder='Select Legal Basis']");
+
+    // Click to activate dropdown
+    legalBasisInput.click();
+
+    // Wait for dropdown to open (optional, if there's a delay)
+    page.waitForTimeout(500);
+
+    // Select first option
+    legalBasisInput.fill("Legitimate interest - existing customer");
+    page.keyboard().press("Enter");
+    
+    
+    }
+    
+    
+    
 }

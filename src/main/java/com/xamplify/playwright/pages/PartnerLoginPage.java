@@ -2,6 +2,7 @@ package com.xamplify.playwright.pages;
 
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.WaitUntilState;
 
 public class PartnerLoginPage {
     private Page page;
@@ -11,7 +12,18 @@ public class PartnerLoginPage {
     }
 
     public void goToLoginPage() {
-        page.navigate("https://xamplify.co/login");
+     
+        
+        page.navigate("https://xamplify.co/login",
+                new Page.NavigateOptions()
+                    .setTimeout(60000)
+                    .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+        
+        
+        
+        
+        
+        
     }
 
     public void login(String email, String password) {
